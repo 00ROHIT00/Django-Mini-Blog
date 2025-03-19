@@ -106,11 +106,26 @@ def clear_welcome_toast(request):
     return JsonResponse({'status': 'success'})
 
 def blog_list(request):
-    posts = BlogPost.objects.all()
+    search_query = request.GET.get('search', '')
+    
+    if search_query:
+        # Search in titles, content, and author usernames
+        posts = BlogPost.objects.filter(
+            models.Q(title__icontains=search_query) |
+            models.Q(content__icontains=search_query) |
+            models.Q(author__username__icontains=search_query)
+        ).order_by('-created_at')
+    else:
+        posts = BlogPost.objects.all().order_by('-created_at')
+    
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     posts = paginator.get_page(page_number)
-    return render(request, 'blog_list.html', {'posts': posts})
+    
+    return render(request, 'blog_list.html', {
+        'posts': posts,
+        'search_query': search_query
+    })
 
 def blog_detail(request, post_id):
     post = get_object_or_404(BlogPost, id=post_id)
