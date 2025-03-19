@@ -1,34 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mini Blog{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root[data-bs-theme="light"] {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --card-border: #dee2e6;
+            --navbar-bg: #ffffff;
+            --navbar-border: #dee2e6;
+            --form-bg: #ffffff;
+            --form-border: #dee2e6;
+            --form-focus-border: #86b7fe;
+            --form-focus-shadow: rgba(13, 110, 253, 0.25);
+            --toast-bg: #ffffff;
+            --toast-border: #dee2e6;
+            --toast-header-bg: #f8f9fa;
+            --modal-bg: #ffffff;
+            --modal-border: #dee2e6;
+            --modal-header-bg: #f8f9fa;
+            --modal-footer-bg: #f8f9fa;
+        }
+
+        :root[data-bs-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --card-border: #333;
+            --navbar-bg: #1e1e1e;
+            --navbar-border: #333;
+            --form-bg: #2d2d2d;
+            --form-border: #444;
+            --form-focus-border: #375a7f;
+            --form-focus-shadow: rgba(55, 90, 127, 0.25);
+            --toast-bg: #1e1e1e;
+            --toast-border: #333;
+            --toast-header-bg: #2d2d2d;
+            --modal-bg: #1e1e1e;
+            --modal-border: #333;
+            --modal-header-bg: #2d2d2d;
+            --modal-footer-bg: #2d2d2d;
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
         }
         .navbar {
-            background-color: #1e1e1e !important;
-            border-bottom: 1px solid #333;
+            background-color: var(--navbar-bg) !important;
+            border-bottom: 1px solid var(--navbar-border);
+            font-family: 'Poppins', sans-serif;
         }
         .navbar-brand, .nav-link {
-            color: #e0e0e0 !important;
+            color: var(--text-color) !important;
+            font-weight: 500;
         }
         .nav-link:hover {
-            color: #ffffff !important;
+            color: var(--text-color) !important;
+            opacity: 0.8;
         }
         .card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            font-family: 'Poppins', sans-serif;
         }
         .card-title {
-            color: #ffffff;
+            color: var(--text-color);
+            font-weight: 600;
         }
         .card-text {
-            color: #e0e0e0;
+            color: var(--text-color);
+            font-weight: 300;
         }
         .text-muted {
             color: #888 !important;
@@ -36,36 +85,40 @@
         .btn-primary {
             background-color: #375a7f;
             border-color: #375a7f;
+            font-weight: 500;
         }
         .btn-primary:hover {
             background-color: #2b4764;
             border-color: #2b4764;
         }
         .navbar-toggler {
-            border-color: #333;
-            background-color: #333;
+            border-color: var(--navbar-border);
+            background-color: var(--navbar-bg);
         }
         .navbar-toggler-icon {
             filter: invert(1);
         }
         .form-control {
-            background-color: #2d2d2d;
-            border-color: #444;
-            color: #e0e0e0;
+            background-color: var(--form-bg);
+            border-color: var(--form-border);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
         }
         .form-control:focus {
-            background-color: #2d2d2d;
-            border-color: #375a7f;
-            color: #e0e0e0;
-            box-shadow: 0 0 0 0.25rem rgba(55, 90, 127, 0.25);
+            background-color: var(--form-bg);
+            border-color: var(--form-focus-border);
+            color: var(--text-color);
+            box-shadow: 0 0 0 0.25rem var(--form-focus-shadow);
         }
         .form-label {
-            color: #e0e0e0;
+            color: var(--text-color);
+            font-weight: 500;
         }
         .alert {
-            background-color: #2d2d2d;
-            border-color: #444;
-            color: #e0e0e0;
+            background-color: var(--form-bg);
+            border-color: var(--form-border);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
         }
         .alert-danger {
             background-color: #442424;
@@ -80,6 +133,7 @@
         a {
             color: #375a7f;
             text-decoration: none;
+            font-weight: 500;
         }
         a:hover {
             color: #2b4764;
@@ -91,18 +145,52 @@
             z-index: 1050;
         }
         .toast {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            color: #e0e0e0;
+            background-color: var(--toast-bg);
+            border: 1px solid var(--toast-border);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
         }
         .toast-header {
-            background-color: #2d2d2d;
-            border-bottom: 1px solid #333;
-            color: #e0e0e0;
+            background-color: var(--toast-header-bg);
+            border-bottom: 1px solid var(--toast-border);
+            color: var(--text-color);
         }
         .toast-body {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
+            background-color: var(--toast-bg);
+            color: var(--text-color);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .modal-content {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--modal-bg);
+            border-color: var(--modal-border);
+        }
+        .modal-header {
+            background-color: var(--modal-header-bg);
+            border-bottom-color: var(--modal-border);
+        }
+        .modal-footer {
+            background-color: var(--modal-footer-bg);
+            border-top-color: var(--modal-border);
+        }
+        .modal-title {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .btn {
+            font-weight: 500;
+        }
+        .theme-toggle {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
@@ -136,7 +224,12 @@
                         </a>
                     </li>
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item me-2">
+                        <div class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -174,6 +267,30 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlElement.setAttribute('data-bs-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Welcome toast functionality
         document.addEventListener('DOMContentLoaded', function() {
             {% if request.session.show_welcome_toast %}
                 var toast = new bootstrap.Toast(document.getElementById('welcomeToast'));

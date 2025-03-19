@@ -113,6 +113,21 @@ def create_comment(request, post_id):
     
     return render(request, 'create_comment.html', {'post': post})
 
+@login_required
+@require_POST
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    post_id = comment.post.id
+    
+    # Check if user is the comment author or the blog post author
+    if request.user == comment.author or request.user == comment.post.author:
+        comment.delete()
+        messages.success(request, 'Comment deleted successfully!')
+    else:
+        messages.error(request, 'You do not have permission to delete this comment.')
+    
+    return redirect('blog_detail', post_id=post_id)
+
 def author_detail(request, author_id):
     author = get_object_or_404(User, id=author_id)
     posts = BlogPost.objects.filter(author=author)
