@@ -11,9 +11,11 @@
                 
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
+                        {% if 'login' in message.tags %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 {% endif %}
 
@@ -36,7 +38,7 @@
                 </form>
 
                 <div class="text-center mt-3">
-                    <p style="color: rgb(129, 129, 129);">Don't have an account? <a href="{% url 'register' %}" class="text-primary">Register</a></p>
+                    <p>Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none">Register here</a></p>
                 </div>
             </div>
         </div>
