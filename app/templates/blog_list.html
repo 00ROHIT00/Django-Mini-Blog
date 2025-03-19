@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog Posts - Mini Blog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">Blog Posts</h1>
+        
+        {% for post in posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <a href="{% url 'blog_detail' post.id %}" class="text-decoration-none">{{ post.title }}</a>
+                    </h2>
+                    <p class="card-text text-muted">
+                        Posted by <a href="{% url 'author_detail' post.author.id %}" class="text-decoration-none">{{ post.author.username }}</a>
+                        on {{ post.created_at|date:"F j, Y" }}
+                    </p>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">
+                No blog posts available yet.
+            </div>
+        {% endfor %}
+
+        {% if posts.has_other_pages %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if posts.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in posts.paginator.page_range %}
+                        {% if posts.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if posts.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ posts.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

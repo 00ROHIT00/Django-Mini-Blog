@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Mini Blog{% endblock %}
+
+{% block content %}
+<style>
+  p, strong, i {
+    color : white;
+  }
+
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title mb-4">About Mini Blog</h1>
+                <p class="lead">
+                    Welcome to Mini Blog, a modern and minimalist blogging platform built with cutting-edge technologies.
+                    Our platform provides a clean, user-friendly interface for sharing thoughts, ideas, and stories with the world.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title h4">Features</h2>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <strong>User Authentication</strong>
+                                <p class="text-muted mb-0">Secure login and registration system with session management</p>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                <strong>Blog Posts</strong>
+                                <p class="text-muted mb-0">Create and manage your blog posts with rich text formatting</p>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-person-badge me-2"></i>
+                                <strong>Author Profiles</strong>
+                                <p class="text-muted mb-0">Personalized author pages showcasing all your posts</p>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-paginate me-2"></i>
+                                <strong>Pagination</strong>
+                                <p class="text-muted mb-0">Efficient navigation through blog posts with pagination</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title h4">Technologies Used</h2>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-code-slash me-2"></i>
+                                <strong>Django</strong>
+                                <p class="text-muted mb-0">High-level Python web framework for rapid development</p>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-bootstrap me-2"></i>
+                                <strong>Bootstrap 5</strong>
+                                <p class="text-muted mb-0">Modern CSS framework for responsive design</p>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-database me-2"></i>
+                                <strong>SQLite</strong>
+                                <p class="text-muted mb-0">Lightweight database for storing blog content</p>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-palette me-2"></i>
+                                <strong>Custom Dark Theme</strong>
+                                <p class="text-muted mb-0">Eye-friendly dark mode interface</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title h4">Get Started</h2>
+                <p>
+                    Ready to start blogging? Create an account and begin sharing your thoughts with the world.
+                    Our platform is designed to be intuitive and user-friendly, making it easy to focus on what matters most - your content.
+                </p>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn btn-primary">Create an Account</a>
+                {% else %}
+                    <a href="{% url 'blog_list' %}" class="btn btn-primary">View Blog Posts</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %} 

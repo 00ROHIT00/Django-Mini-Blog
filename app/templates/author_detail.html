@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ author.username }}'s Profile - Mini Blog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title">{{ author.username }}'s Profile</h1>
+                <p class="text-muted">Member since {{ author.date_joined|date:"F j, Y" }}</p>
+            </div>
+        </div>
+
+        <h2 class="mb-4">Blog Posts by {{ author.username }}</h2>
+        
+        {% for post in posts %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <a href="{% url 'blog_detail' post.id %}" class="text-decoration-none">{{ post.title }}</a>
+                    </h3>
+                    <p class="card-text text-muted">
+                        Posted on {{ post.created_at|date:"F j, Y" }}
+                    </p>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">
+                {{ author.username }} hasn't written any blog posts yet.
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
