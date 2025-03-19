@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import User, BlogPost
+from .models import User, BlogPost, Comment
 from django.utils import timezone
 from datetime import timedelta
 
@@ -83,7 +83,27 @@ def blog_list(request):
 
 def blog_detail(request, post_id):
     post = get_object_or_404(BlogPost, id=post_id)
-    return render(request, 'blog_detail.html', {'post': post})
+    comments = post.comments.all()  # Comments are already ordered by created_at due to model Meta
+    return render(request, 'blog_detail.html', {
+        'post': post,
+        'comments': comments
+    })
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(BlogPost, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content', '').strip()
+        if content:
+            Comment.objects.create(
+                content=content,
+                author=request.user,
+                post=post
+            )
+            messages.success(request, 'Comment added successfully!')
+        else:
+            messages.error(request, 'Comment cannot be empty.')
+    return redirect('blog_detail', post_id=post_id)
 
 def author_detail(request, author_id):
     author = get_object_or_404(User, id=author_id)

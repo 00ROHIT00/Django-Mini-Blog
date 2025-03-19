@@ -3,25 +3,105 @@
 {% block title %}{{ post.title }} - Mini Blog{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <article class="card">
-            <div class="card-body">
-                <h1 class="card-title">{{ post.title }}</h1>
-                <p class="text-muted">
-                    Posted by <a href="{% url 'blogger_detail' post.author.id %}" class="text-decoration-none">{{ post.author.username }}</a>
-                    on {{ post.created_at|date:"F j, Y" }}
-                </p>
-                <div class="card-text">
-                    {{ post.content|linebreaks }}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Blog Post -->
+            <div class="card bg-dark text-light mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">{{ post.title }}</h1>
+                    <div class="text-muted mb-3">
+                        By <a href="{% url 'blogger_detail' post.author.id %}" class="text-light">{{ post.author.username }}</a> 
+                        on {{ post.created_at|date:"F j, Y" }}
+                    </div>
+                    <div class="card-text">
+                        {{ post.content|linebreaks }}
+                    </div>
                 </div>
-                {% if post.updated_at != post.created_at %}
-                    <p class="text-muted mt-3">
-                        Last updated: {{ post.updated_at|date:"F j, Y" }}
-                    </p>
-                {% endif %}
             </div>
-        </article>
+
+            <!-- Comments Section -->
+            <div class="card bg-dark text-light">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Comments</h3>
+                    
+                    {% if user.is_authenticated %}
+                    <!-- Comment Form -->
+                    <form method="post" action="{% url 'add_comment' post.id %}" class="mb-4">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea name="content" class="form-control bg-dark text-light" rows="3" placeholder="Write a comment..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+                    </form>
+                    {% else %}
+                    <p class="text-muted">Please <a href="{% url 'login' %}" class="text-light">login</a> to leave a comment.</p>
+                    {% endif %}
+
+                    <!-- Comments List -->
+                    {% if comments %}
+                        {% for comment in comments %}
+                        <div class="comment mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <a href="{% url 'blogger_detail' comment.author.id %}" class="text-light">{{ comment.author.username }}</a>
+                                    <small class="text-muted ms-2">{{ comment.created_at|date:"F j, Y" }}</small>
+                                </div>
+                            </div>
+                            <p class="mb-0">{{ comment.content|linebreaks }}</p>
+                        </div>
+                        {% if not forloop.last %}
+                        <hr class="bg-secondary">
+                        {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No comments yet. Be the first to comment!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-light mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">About the Author</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        {% if post.author.profile_picture %}
+                            <img src="{{ post.author.profile_picture.url }}" alt="{{ post.author.username }}" class="rounded-circle me-3" style="width: 64px; height: 64px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-secondary me-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                                <span class="h4 mb-0">{{ post.author.username|first|upper }}</span>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-1"><a href="{% url 'blogger_detail' post.author.id %}" class="text-light">{{ post.author.username }}</a></h6>
+                            {% if post.author.bio %}
+                                <p class="small text-muted mb-0">{{ post.author.bio|truncatewords:20 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-dark text-light">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Quick Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <a href="{% url 'blog_list' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-list me-2"></i>All Blog Posts
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="{% url 'about' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-info-circle me-2"></i>About Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %} 
