@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from .models import User, BlogPost, Comment
 from django.utils import timezone
 from datetime import timedelta
+from django.urls import reverse
 
 # Create your views here.
 
@@ -57,6 +58,11 @@ def login_view(request):
             # Set session variable to show welcome toast
             request.session['show_welcome_toast'] = True
             messages.success(request, 'Login successful!')
+            
+            # Check if there's a next URL to redirect to
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
             return redirect('home')
         else:
             messages.error(request, 'Invalid username or password')
@@ -90,7 +96,7 @@ def blog_detail(request, post_id):
     })
 
 @login_required
-def add_comment(request, post_id):
+def create_comment(request, post_id):
     post = get_object_or_404(BlogPost, id=post_id)
     if request.method == 'POST':
         content = request.POST.get('content', '').strip()
@@ -101,9 +107,11 @@ def add_comment(request, post_id):
                 post=post
             )
             messages.success(request, 'Comment added successfully!')
+            return redirect('blog_detail', post_id=post_id)
         else:
             messages.error(request, 'Comment cannot be empty.')
-    return redirect('blog_detail', post_id=post_id)
+    
+    return render(request, 'create_comment.html', {'post': post})
 
 def author_detail(request, author_id):
     author = get_object_or_404(User, id=author_id)

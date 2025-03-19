@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Comment - {{ post.title }} - Mini Blog{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card bg-dark text-light">
+                <div class="card-body">
+                    <h1 class="card-title mb-4">Add Comment</h1>
+                    
+                    <!-- Blog Post Info -->
+                    <div class="mb-4">
+                        <h5>Commenting on:</h5>
+                        <h3>
+                            <a href="{% url 'blog_detail' post.id %}" class="text-light text-decoration-none">
+                                {{ post.title }}
+                            </a>
+                        </h3>
+                        <p class="text-muted mb-0">
+                            By <a href="{% url 'blogger_detail' post.author.id %}" class="text-light">{{ post.author.username }}</a>
+                            on {{ post.created_at|date:"F j, Y" }}
+                        </p>
+                    </div>
+
+                    <!-- Comment Form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="content" class="form-label">Your Comment</label>
+                            <textarea name="content" id="content" class="form-control bg-dark text-light" rows="6" required></textarea>
+                            <div class="form-text text-muted">
+                                Write your comment here. HTML tags will be stripped for security.
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{% url 'blog_detail' post.id %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-light mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Quick Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <a href="{% url 'blog_list' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-list me-2"></i>All Blog Posts
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="{% url 'blogger_list' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-users me-2"></i>All Bloggers
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="{% url 'about' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-info-circle me-2"></i>About Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
