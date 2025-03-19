@@ -10,5 +10,5 @@ urlpatterns = [
     path('clear-welcome-toast/', views.clear_welcome_toast, name='clear_welcome_toast'),
     path('blog/blogs/', views.blog_list, name='blog_list'),
     path('blog/post/<int:post_id>/', views.blog_detail, name='blog_detail'),
-    path('author/<int:author_id>/', views.author_detail, name='author_detail'),
+    path('blog/blogger/<int:author_id>/', views.blogger_detail, name='blogger_detail'),
 ] 

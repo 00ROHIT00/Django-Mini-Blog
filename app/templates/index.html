@@ -7,25 +7,91 @@
     <div class="col-md-8">
         <h1 class="mb-4">Latest Posts</h1>
         
-        <!-- Dummy Blog Post 1 -->
-        <article class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Getting Started with Django</h2>
-                <p class="text-muted">Posted by John Doe on January 1, 2024</p>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                <a href="#" class="btn btn-primary">Read More</a>
+        {% if latest_posts %}
+            {% for post in latest_posts %}
+                <article class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <a href="{% url 'blog_detail' post.id %}" class="text-decoration-none">{{ post.title }}</a>
+                        </h2>
+                        <p class="text-muted">
+                            Posted by <a href="{% url 'blogger_detail' post.author.id %}" class="text-decoration-none">{{ post.author.username }}</a>
+                            on {{ post.created_at|date:"F j, Y" }}
+                        </p>
+                        <p class="card-text">{{ post.content|truncatewords:50 }}</p>
+                        <a href="{% url 'blog_detail' post.id %}" class="btn btn-primary">Read More</a>
+                    </div>
+                </article>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                No blog posts available yet. Be the first to create a post!
             </div>
-        </article>
+        {% endif %}
+    </div>
 
-        <!-- Dummy Blog Post 2 -->
-        <article class="card mb-4">
+    <div class="col-md-4">
+        <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title">Python Best Practices</h2>
-                <p class="text-muted">Posted by Jane Smith on December 31, 2023</p>
-                <p class="card-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <a href="#" class="btn btn-primary">Read More</a>
+                <h3 class="card-title h4 mb-3">Active Bloggers</h3>
+                {% if active_bloggers %}
+                    <div class="list-group list-group-flush">
+                        {% for blogger in active_bloggers %}
+                            <a href="{% url 'blogger_detail' blogger.id %}" class="list-group-item list-group-item-action bg-transparent py-3">
+                                <div class="d-flex align-items-center">
+                                    {% if blogger.profile_picture %}
+                                        <img src="{{ blogger.profile_picture.url }}" alt="{{ blogger.username }}'s profile" 
+                                             class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary me-2" 
+                                             style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <span class="text-white">{{ blogger.username|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0" style="color: white;">{{ blogger.username }}</h6>
+                                        <small class="text-muted">
+                                            {{ blogger.blog_posts.first.created_at|date:"M j" }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No active bloggers in the last 30 days.</p>
+                {% endif %}
             </div>
-        </article>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title h4 mb-3">Quick Links</h3>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3">
+                        <a href="{% url 'blog_list' %}" class="text-decoration-none">
+                            <i class="bi bi-journal-text"></i> View All Posts
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'blogger_detail' user.id %}" class="text-decoration-none">
+                                <i class="bi bi-person-circle"></i> My Profile
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'login' %}" class="text-decoration-none">
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Add Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 {% endblock %} 

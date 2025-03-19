@@ -6,11 +6,25 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import User, BlogPost
+from django.utils import timezone
+from datetime import timedelta
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'index.html')
+    # Get latest 3 blog posts
+    latest_posts = BlogPost.objects.all()[:3]
+    
+    # Get active bloggers (users who have posted in the last 30 days)
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    active_bloggers = User.objects.filter(
+        blog_posts__created_at__gte=thirty_days_ago
+    ).distinct().order_by('-blog_posts__created_at')[:5]
+    
+    return render(request, 'index.html', {
+        'latest_posts': latest_posts,
+        'active_bloggers': active_bloggers
+    })
 
 def about(request):
     return render(request, 'about.html')
@@ -75,3 +89,11 @@ def author_detail(request, author_id):
     author = get_object_or_404(User, id=author_id)
     posts = BlogPost.objects.filter(author=author)
     return render(request, 'author_detail.html', {'author': author, 'posts': posts})
+
+def blogger_detail(request, author_id):
+    author = get_object_or_404(User, id=author_id)
+    posts = BlogPost.objects.filter(author=author).order_by('-created_at')
+    return render(request, 'blogger_detail.html', {
+        'author': author,
+        'posts': posts
+    })

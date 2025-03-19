@@ -14,7 +14,7 @@
                         <a href="{% url 'blog_detail' post.id %}" class="text-decoration-none">{{ post.title }}</a>
                     </h2>
                     <p class="card-text text-muted">
-                        Posted by <a href="{% url 'author_detail' post.author.id %}" class="text-decoration-none">{{ post.author.username }}</a>
+                        Posted by <a href="{% url 'blogger_detail' post.author.id %}" class="text-decoration-none">{{ post.author.username }}</a>
                         on {{ post.created_at|date:"F j, Y" }}
                     </p>
                 </div>
