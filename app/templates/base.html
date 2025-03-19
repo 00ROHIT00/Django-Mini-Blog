@@ -126,6 +126,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'blogger_list' %}active{% endif %}" href="{% url 'blogger_list' %}">
+                            Bloggers
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">
                             About
                         </a>

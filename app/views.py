@@ -117,3 +117,8 @@ def blogger_detail(request, author_id):
         'author': author,
         'posts': posts
     })
+
+def blogger_list(request):
+    # Get all users who have published at least one blog post
+    bloggers = User.objects.filter(blog_posts__isnull=False).distinct().order_by('username')
+    return render(request, 'blogger_list.html', {'bloggers': bloggers})

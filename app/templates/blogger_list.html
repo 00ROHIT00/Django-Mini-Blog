@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}All Bloggers - Mini Blog{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card bg-dark text-light">
+                <div class="card-body">
+                    <h1 class="card-title mb-4">All Bloggers</h1>
+                    
+                    {% if bloggers %}
+                        <div class="row">
+                            {% for blogger in bloggers %}
+                            <div class="col-md-6 mb-4">
+                                <div class="d-flex align-items-center">
+                                    {% if blogger.profile_picture %}
+                                        <img src="{{ blogger.profile_picture.url }}" alt="{{ blogger.username }}" class="rounded-circle me-3" style="width: 64px; height: 64px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary me-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                                            <span class="h4 mb-0">{{ blogger.username|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h5 class="mb-1">
+                                            <a href="{% url 'blogger_detail' blogger.id %}" class="text-light text-decoration-none">
+                                                {{ blogger.username }}
+                                            </a>
+                                        </h5>
+                                        {% if blogger.bio %}
+                                            <p class="small text-muted mb-0">{{ blogger.bio|truncatewords:20 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No bloggers found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="card bg-dark text-light mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Quick Links</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3">
+                            <a href="{% url 'blog_list' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-list me-2"></i>All Blog Posts
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="{% url 'about' %}" class="text-light text-decoration-none">
+                                <i class="fas fa-info-circle me-2"></i>About Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
