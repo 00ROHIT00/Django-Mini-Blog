@@ -51,7 +51,7 @@
                                     <div>
                                         <h6 class="mb-0" style="color: var(--text-color);">{{ blogger.username }}</h6>
                                         <small class="text-muted">
-                                            {{ blogger.blog_posts.first.created_at|date:"M j" }}
+                                            {{ blogger.last_post_date|date:"M j" }}
                                         </small>
                                     </div>
                                 </div>

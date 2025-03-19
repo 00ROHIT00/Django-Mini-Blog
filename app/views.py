@@ -9,6 +9,7 @@ from .models import User, BlogPost, Comment
 from django.utils import timezone
 from datetime import timedelta
 from django.urls import reverse
+from django.db import models
 
 # Create your views here.
 
@@ -20,7 +21,9 @@ def home(request):
     thirty_days_ago = timezone.now() - timedelta(days=30)
     active_bloggers = User.objects.filter(
         blog_posts__created_at__gte=thirty_days_ago
-    ).distinct().order_by('-blog_posts__created_at')[:5]
+    ).annotate(
+        last_post_date=models.Max('blog_posts__created_at')
+    ).distinct().order_by('-last_post_date')[:5]
     
     return render(request, 'index.html', {
         'latest_posts': latest_posts,
@@ -33,14 +36,35 @@ def about(request):
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
-        password = request.POST['password']
+        password1 = request.POST['password1']
+        password2 = request.POST['password2']
         email = request.POST['email']
+        full_name = request.POST['full_name']
+        
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match')
+            return redirect('register')
         
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
             return redirect('register')
         
-        user = User.objects.create_user(username=username, password=password, email=email)
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already exists')
+            return redirect('register')
+        
+        # Split full name into first and last name
+        name_parts = full_name.split(maxsplit=1)
+        first_name = name_parts[0]
+        last_name = name_parts[1] if len(name_parts) > 1 else ''
+        
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            password=password1
+        )
         login(request, user)
         messages.success(request, 'Registration successful!')
         return redirect('home')
@@ -145,3 +169,23 @@ def blogger_list(request):
     # Get all users who have published at least one blog post
     bloggers = User.objects.filter(blog_posts__isnull=False).distinct().order_by('username')
     return render(request, 'blogger_list.html', {'bloggers': bloggers})
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', '').strip()
+        content = request.POST.get('content', '').strip()
+        
+        if not title or not content:
+            messages.error(request, 'Both title and content are required.')
+            return redirect('create_post')
+        
+        post = BlogPost.objects.create(
+            title=title,
+            content=content,
+            author=request.user
+        )
+        messages.success(request, 'Blog post created successfully!')
+        return redirect('blog_detail', post_id=post.id)
+    
+    return render(request, 'create_post.html')

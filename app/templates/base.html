@@ -213,6 +213,13 @@
                             Blog Posts
                         </a>
                     </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'create_post' %}active{% endif %}" href="{% url 'create_post' %}">
+                            Create Post
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'blogger_list' %}active{% endif %}" href="{% url 'blogger_list' %}">
                             Bloggers
