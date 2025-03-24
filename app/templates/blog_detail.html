@@ -98,13 +98,15 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title h4 mb-3">More Posts</h3>
-                {% with author_posts=post.author.blog_posts.exclude.id=post.id|slice:":5" %}
+                {% with author_posts=post.author.blog_posts.all|slice:":5" %}
                     {% if author_posts %}
                         <div class="list-group list-group-flush">
-                            {% for post in author_posts %}
-                                <a href="{% url 'blog_detail' post.id %}" class="list-group-item list-group-item-action">
-                                    {{ post.title }}
-                                </a>
+                            {% for other_post in author_posts %}
+                                {% if other_post.id != post.id %}
+                                    <a href="{% url 'blog_detail' other_post.id %}" class="list-group-item list-group-item-action">
+                                        {{ other_post.title }}
+                                    </a>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     {% else %}
